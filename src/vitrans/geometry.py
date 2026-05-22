@@ -17,3 +17,7 @@ def content_capture_rect(overlay_rect: Rect, top_bar_height: int) -> Rect:
         width=overlay_rect.width,
         height=max(1, overlay_rect.height - top_bar_height),
     )
+
+
+def font_size_for_bbox(bbox: Rect) -> int:
+    return max(10, min(32, int(bbox.height * 0.85)))

@@ -1,4 +1,5 @@
 import sys
+import threading
 from pathlib import Path
 
 from vitrans.encoding import configure_utf8_stdio
@@ -12,9 +13,9 @@ from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 from vitrans.capture import capture_rect
 from vitrans.config import default_config_path, load_config, save_config
-from vitrans.geometry import content_capture_rect, translate_capture_bbox_to_overlay
+from vitrans.geometry import content_capture_rect, font_size_for_bbox, translate_capture_bbox_to_overlay
 from vitrans.models import TranslatedBox
-from vitrans.ocr import read_text
+from vitrans.ocr import read_text, warm_up_reader
 from vitrans.overlay import TOP_BAR_HEIGHT, OverlayWindow
 from vitrans.selection import SelectionWindow
 from vitrans.translate import TranslationError, translate_texts
@@ -36,6 +37,7 @@ class ViTransApp:
         self.tray = self._create_tray()
         self.bridge.toggle_requested.connect(self.toggle_overlay)
         self.hotkey_listener = keyboard.GlobalHotKeys({"<alt>+t": self.toggle_overlay_threadsafe})
+        threading.Thread(target=warm_up_reader, daemon=True).start()
 
     def _create_tray(self) -> QSystemTrayIcon:
         icon_path = Path(__file__).resolve().parents[2] / "assets" / "logo.png"
@@ -120,6 +122,7 @@ class ViTransApp:
                     original=result.text,
                     translated=translated,
                     bbox=translate_capture_bbox_to_overlay(result.bbox, 0, TOP_BAR_HEIGHT),
+                    font_size=font_size_for_bbox(result.bbox),
                 )
                 for result, translated in zip(ocr_results, translated_texts, strict=True)
             ]

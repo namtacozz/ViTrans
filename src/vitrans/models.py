@@ -21,3 +21,4 @@ class TranslatedBox:
     original: str
     translated: str
     bbox: Rect
+    font_size: int

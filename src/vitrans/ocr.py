@@ -16,6 +16,10 @@ def get_reader() -> easyocr.Reader:
     return easyocr.Reader(["en"], gpu=False)
 
 
+def warm_up_reader() -> None:
+    get_reader()
+
+
 def _bbox_to_rect(points: list[list[float]]) -> Rect:
     xs = [int(point[0]) for point in points]
     ys = [int(point[1]) for point in points]

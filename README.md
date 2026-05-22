@@ -21,7 +21,7 @@ pip install -r requirements.txt
 PYTHONPATH=src python -m vitrans.main
 ```
 
-First OCR run may download EasyOCR models.
+First OCR run may download EasyOCR models. After startup, ViTrans warms OCR in the background to reduce first translation delay.
 
 ## Use
 
@@ -31,7 +31,7 @@ First OCR run may download EasyOCR models.
 - Press `Alt+T` again while overlay is visible to hide it.
 - Put overlay around text in another app.
 - Click `ViTrans`.
-- Translated Vietnamese text appears over detected text.
+- Translated Vietnamese text appears as white text over detected text, sized from OCR line boxes.
 - Click `X` to hide overlay.
 - Use tray menu `Exit` to exit.
 - Right-click tray icon for `Open Ui` and `Exit`.

@@ -205,10 +205,15 @@ class OverlayWindow(QWidget):
                 self._status,
             )
 
-        painter.setFont(QFont("Segoe UI", 10))
         for item in self._translated_boxes:
-            rect = QRect(item.bbox.x, item.bbox.y, item.bbox.width, max(item.bbox.height, 24))
-            painter.fillRect(rect.adjusted(-2, -2, 2, 2), QColor(0, 0, 0, 190))
+            rect = QRect(item.bbox.x, item.bbox.y, item.bbox.width, max(item.bbox.height, item.font_size + 4))
+            painter.setFont(QFont("Segoe UI", item.font_size))
+            painter.setPen(QColor(0, 0, 0, 160))
+            painter.drawText(
+                rect.adjusted(1, 1, 1, 1),
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter | Qt.TextFlag.TextWordWrap,
+                item.translated,
+            )
             painter.setPen(QColor(255, 255, 255))
             painter.drawText(
                 rect,

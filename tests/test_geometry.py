@@ -1,5 +1,5 @@
 from vitrans.models import Rect
-from vitrans.geometry import content_capture_rect, translate_capture_bbox_to_overlay
+from vitrans.geometry import content_capture_rect, font_size_for_bbox, translate_capture_bbox_to_overlay
 
 
 def test_translate_capture_bbox_to_overlay_offsets_by_content_origin():
@@ -18,3 +18,15 @@ def test_content_capture_rect_never_returns_negative_height():
     overlay = Rect(x=100, y=200, width=500, height=20)
     result = content_capture_rect(overlay, top_bar_height=36)
     assert result == Rect(x=100, y=236, width=500, height=1)
+
+
+def test_font_size_for_bbox_clamps_small_text():
+    assert font_size_for_bbox(Rect(x=0, y=0, width=100, height=8)) == 10
+
+
+def test_font_size_for_bbox_scales_normal_text():
+    assert font_size_for_bbox(Rect(x=0, y=0, width=100, height=24)) == 20
+
+
+def test_font_size_for_bbox_clamps_large_text():
+    assert font_size_for_bbox(Rect(x=0, y=0, width=100, height=80)) == 32
