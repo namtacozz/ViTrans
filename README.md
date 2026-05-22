@@ -36,6 +36,16 @@ First OCR run may download EasyOCR models. After startup, ViTrans warms OCR in t
 - Use tray menu `Exit` to exit.
 - Right-click tray icon for `Open Ui` and `Exit`.
 
+## Build Windows app
+
+```bash
+. .venv312/Scripts/activate
+python scripts/build_windows.py
+./dist/ViTrans/ViTrans.exe
+```
+
+Build output is a one-folder Windows app at `dist/ViTrans/`. Running `ViTrans.exe` gives Windows a real process name and icon for Task Manager and taskbar/tray behavior.
+
 ## Test
 
 ```bash

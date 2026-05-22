@@ -1,6 +1,6 @@
+import ctypes
 import sys
 import threading
-from pathlib import Path
 
 from vitrans.encoding import configure_utf8_stdio
 
@@ -17,8 +17,15 @@ from vitrans.geometry import content_capture_rect, font_size_for_bbox, translate
 from vitrans.models import TranslatedBox
 from vitrans.ocr import read_text, warm_up_reader
 from vitrans.overlay import TOP_BAR_HEIGHT, OverlayWindow
+from vitrans.resources import resource_path
 from vitrans.selection import SelectionWindow
 from vitrans.translate import TranslationError, translate_texts
+
+
+def set_windows_app_id() -> None:
+    if sys.platform != "win32":
+        return
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("ViTrans.App")
 
 
 class UiBridge(QObject):
@@ -29,7 +36,12 @@ class ViTransApp:
     def __init__(self):
         self.config_path = default_config_path()
         self.config = load_config(self.config_path)
+        set_windows_app_id()
         self.qt_app = QApplication(sys.argv)
+        self.qt_app.setApplicationName("ViTrans")
+        self.qt_app.setApplicationDisplayName("ViTrans")
+        self.qt_app.setDesktopFileName("ViTrans")
+        self.qt_app.setWindowIcon(QIcon(str(resource_path("assets/logo.ico"))))
         self.qt_app.setQuitOnLastWindowClosed(False)
         self.bridge = UiBridge()
         self.overlay = OverlayWindow(self.config, self.translate_selection, self.hide_overlay)
@@ -40,8 +52,7 @@ class ViTransApp:
         threading.Thread(target=warm_up_reader, daemon=True).start()
 
     def _create_tray(self) -> QSystemTrayIcon:
-        icon_path = Path(__file__).resolve().parents[2] / "assets" / "logo.png"
-        tray = QSystemTrayIcon(QIcon(str(icon_path)), self.qt_app)
+        tray = QSystemTrayIcon(QIcon(str(resource_path("assets/logo.ico"))), self.qt_app)
         tray.setToolTip("ViTrans")
         menu = QMenu()
 
