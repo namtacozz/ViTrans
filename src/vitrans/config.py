@@ -5,11 +5,26 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class AppConfig:
+    # Overlay geometry
     x: int = 200
     y: int = 160
     width: int = 640
     height: int = 360
+
+    # Translation
     target_language: str = "vi"
+    source_language: str = "auto"
+
+    # UI
+    overlay_color: str = "blue"
+
+    # Hotkey
+    hotkey_modifier: str = "alt"
+    hotkey_key: str = "t"
+
+    # System
+    run_as_admin: bool = False
+    start_with_windows: bool = False
 
 
 def default_config_path() -> Path:
